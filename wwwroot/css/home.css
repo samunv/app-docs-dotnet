@@ -1,0 +1,126 @@
+﻿.hf-input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 794px;
+    position: absolute;
+    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+   #inputHeader{
+        top:100px;
+    }
+
+    #inputFooter{
+        bottom:0px;
+    }
+
+
+    .toolbar {
+        padding:20px;
+        display: flex;
+        gap: 4px;
+        align-items:center;
+        border-bottom: 1px solid #ccc;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+        padding-inline:50px;
+        position:fixed;
+        z-index:1000;
+        background-color:white; 
+        left:50%;
+        transform: translateX(-50%);
+        top:0px;
+        width:100%;
+    }
+
+    .toolbar button {
+        padding: 6px 10px;
+        border:none;
+        background: white;
+        cursor: pointer;
+        border-radius: 3px;
+        min-width: 32px;
+    }
+
+    .toolbar .separador {
+        width: 1px;
+        margin: 0 10px;
+    }
+
+
+#contenedor-paginas {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    position:relative;
+}
+
+.pagina {
+    width: 794px;
+    height: 1123px;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.pagina-header {
+    padding: 20px 60px;
+    border-bottom: 1px dashed lightgray;
+    text-align: center;
+    color: #555;
+    min-height: 50px;
+}
+
+.pagina-contenido {
+    flex: 1;
+    padding: 30px 60px;
+    outline: none;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 1.6;
+}
+
+.pagina-footer {
+    padding: 20px 60px;
+    border-top: 1px dashed lightgray;
+    display: flex;
+    justify-content: space-between;
+    color: #555;
+    min-height: 50px;
+}
+
+
+.botones-exportar {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+    .botones-exportar button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+
+.btn-pdf {
+    background: #e74c3c !important;
+    color: white;
+    margin-left:auto;
+}
+
+.btn-word {
+    background: #2b5fad !important;
+    color: white;
+}
