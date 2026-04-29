@@ -6,7 +6,7 @@ using HtmlToOpenXml;
 
 namespace HtmlEditorApp.Services
 {
-    public class DocumentService
+    public class DocumentWordService
     {
         public async Task<byte[]> GenerarWord(RequestDocumento request)
         {

@@ -134,7 +134,29 @@ function insertarEnlace() {
     if (url) document.execCommand('createLink', false, url);
 }
 
-function exportarPDF() { window.print(); }
+async function exportarPDF() {
+    const header = document.getElementById('inputHeader').value;
+    const footer = document.getElementById('inputFooter').value;
+    const htmlContent = paginas.map(p => p.body).join('');
+
+    const response = await fetch('/Home/ExportPDF', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ htmlContent, header, footer })
+    });
+
+    if (!response.ok) {
+        alert('Error al generar el PDF');
+        return;
+    }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'documento.pdf';
+    a.click();
+    URL.revokeObjectURL(url); }
 
 async function exportarWord() {
     const header = document.getElementById('inputHeader').value;

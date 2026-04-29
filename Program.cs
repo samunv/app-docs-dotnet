@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // añadir el service
-builder.Services.AddScoped<DocumentService>();
+builder.Services.AddScoped<DocumentWordService>();
+builder.Services.AddScoped<DocumentPdfService>();
 
 QuestPDF.Settings.License = LicenseType.Community;
 

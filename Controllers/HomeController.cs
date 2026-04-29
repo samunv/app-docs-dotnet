@@ -7,12 +7,14 @@ namespace HtmlEditorApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly DocumentService _documentService;
+        private readonly DocumentWordService _documentWordService;
+        private readonly DocumentPdfService _documentPdfService;
 
 
-        public HomeController(DocumentService documentService)
+        public HomeController(DocumentWordService documentWordService, DocumentPdfService documentPdfService)
         {
-            _documentService = documentService;
+            _documentWordService = documentWordService;
+            _documentPdfService = documentPdfService;
         }
 
         public IActionResult Index()
@@ -25,20 +27,22 @@ namespace HtmlEditorApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ExportWord([FromBody] RequestDocumento request)
         {
-            var bytes = await _documentService.GenerarWord(request);
+            var bytes = await _documentWordService.GenerarWord(request);
             return File(bytes, 
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
                 "documento.docx");
         }
 
-        //// POST /Home/ExportPDF
-        //// recibe el HTML y convertimos a PDF para exportar
-        //[HttpPost]
-        //public IActionResult ExportPDF([FromBody] RequestDocumento request)
-        //{
-        //    var bytes = _documentService.GenerarPdf(request);
-        //    return File(bytes, "application/pdf", "documento.pdf");
-        //}
+        /** POST /Home/ExportPDF
+        / recibe el HTML y convertimos a PDF para exportar**/
+        [HttpPost]
+        public  async Task<IActionResult> ExportPDF([FromBody] RequestDocumento request)
+        {
+            var bytes = await _documentPdfService.GenerarPdf(request);
+            return File(bytes, "application/pdf", "documento.pdf");
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
