@@ -160,22 +160,21 @@ async function exportarPDF() {
     URL.revokeObjectURL(url); }
 
 async function exportarWord() {
-    const header = document.querySelector('.pagina-header')?.textContent.trim() ?? '';
-    const footer = document.querySelector('.footer-texto')?.textContent.trim() ?? '';
-    const htmlContent = paginas.map(p => p.body).join('');
-
-    const response = await fetch('/Home/ExportWord', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ htmlContent, header, footer })
-    });
-
-    if (!response.ok) {
-        alert('Error al generar el Word');
+    const HTMLtoDOCX = window.HTMLtoDOCX;
+    if (!HTMLtoDOCX) {
+        alert('La librería de exportación Word no está disponible. Verifica tu conexión.');
         return;
     }
 
-    const blob = await response.blob();
+    const htmlContent = paginas.map(p => p.body).join('');
+
+    const blob = await HTMLtoDOCX(
+        htmlContent,
+        headerContent,
+        { font: 'Arial', fontSize: 24 },
+        footerContent
+    );
+
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
