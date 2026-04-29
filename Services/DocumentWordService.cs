@@ -17,6 +17,19 @@ namespace HtmlEditorApp.Services
                 var mainPart = doc.AddMainDocumentPart();
                 mainPart.Document = new WordDocument.Document(new WordDocument.Body());
 
+                var stylesPart = mainPart.AddNewPart<StyleDefinitionsPart>();
+                stylesPart.Styles = new WordDocument.Styles(
+                    new WordDocument.DocDefaults(
+                        new WordDocument.RunPropertiesDefault(
+                            new WordDocument.RunPropertiesBaseStyle(
+                                new WordDocument.RunFonts { Ascii = "Arial", HighAnsi = "Arial" },
+                                new WordDocument.FontSize { Val = "24" }
+                            )
+                        )
+                    )
+                );
+                stylesPart.Styles.Save();
+
                 await AgregarHeader(mainPart, request.Header ?? "");
                 await AgregarFooter(mainPart, request.Footer ?? "");
                 await AgregarContenido(mainPart, request.HtmlContent ?? "");
