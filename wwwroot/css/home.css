@@ -27,6 +27,11 @@
         min-width: 32px;
     }
 
+    .toolbar button.btn-active {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+    }
+
     .toolbar .separador {
         width: 1px;
         margin: 0 10px;

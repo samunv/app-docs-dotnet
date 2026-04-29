@@ -8,6 +8,7 @@ const paginas = [];
 let seleccionGuardada = null;
 let headerContent = '';
 let footerContent = '';
+let spellcheckEnabled = true;
 
 const OBSERVER_CONFIG = { subtree: true, childList: true, characterData: true, attributes: true };
 const headerObservers = new Map();
@@ -69,10 +70,10 @@ function getHTMLDivPage(pagina) {
     div.className = 'pagina';
     div.dataset.num = pagina.num;
     div.innerHTML = `
-        <div class="pagina-header"></div>
-        <div class="pagina-contenido" contenteditable="true">${pagina.body}</div>
+        <div class="pagina-header" spellcheck="${spellcheckEnabled}"></div>
+        <div class="pagina-contenido" contenteditable="true" spellcheck="${spellcheckEnabled}">${pagina.body}</div>
         <div class="pagina-footer">
-            <span class="footer-texto"></span>
+            <span class="footer-texto" spellcheck="${spellcheckEnabled}"></span>
             <span>Página ${pagina.num}</span>
         </div>
     `;
@@ -250,6 +251,16 @@ function cargarImagen(input) {
 
 
 
+function toggleSpellcheck() {
+    spellcheckEnabled = !spellcheckEnabled;
+    const btn = document.getElementById('btn-spellcheck');
+    btn.classList.toggle('btn-active', spellcheckEnabled);
+    document.querySelectorAll('.pagina-contenido, .pagina-header, .footer-texto').forEach(el => {
+        el.spellcheck = spellcheckEnabled;
+    });
+}
+
+window.toggleSpellcheck = toggleSpellcheck;
 window.insertarImagen = insertarImagen;
 window.cargarImagen = cargarImagen;
 window.cambiarTamano = cambiarTamano;
