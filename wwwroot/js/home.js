@@ -6,30 +6,14 @@ const paginas = [];
 
 
 let seleccionGuardada = null;
+let headerContent = '';
+let footerContent = '';
 
 
 const imagenManager = new ImagenManager();
 
 
 window.addEventListener('DOMContentLoaded', () => {
-    const inputHeader = document.getElementById('inputHeader');
-    const inputFooter = document.getElementById('inputFooter');
-
-    inputHeader.style.display = "none";
-    inputFooter.style.display = "none"
-
-
-    // Esconder al detectar click fuera
-    detectarClickFuera(inputHeader)
-    detectarClickFuera(inputFooter)
-
-
-
-    inputHeader.oninput = sincronizarHeaderFooter;
-    inputFooter.oninput = sincronizarHeaderFooter;
-
-
-    // Detectar salida del ratón de la selección de texto (para aplicar tamaño de fuente)
     document.addEventListener('mouseup', () => {
         const sel = window.getSelection();
         if (sel.rangeCount > 0) {
@@ -49,19 +33,6 @@ window.addEventListener('DOMContentLoaded', () => {
     agregarPagina();
 });
 
-function detectarClickFuera(input) {
-    input.addEventListener('blur', () => {
-        input.style.display = 'none';
-    });
-}
-
-function detectarClickSection(section, input) {
-    section.addEventListener('dblclick', () => {
-        input.style.display = 'block';
-        input.focus()
-    });
-}
-
 function renderizarPagina(pagina) {
     const contenedor = document.getElementById('contenedor-paginas');
 
@@ -77,15 +48,39 @@ function renderizarPagina(pagina) {
         </div>
     `;
 
-    // Aquí seleccionamos el header de ESTA página recién creada
     const headerEl = div.querySelector('.pagina-header');
-    const footerEl = div.querySelector('.pagina-footer')
+    const footerTexto = div.querySelector('.footer-texto');
 
-    const inputHeader = document.getElementById('inputHeader');
-    const inputFooter = document.getElementById("inputFooter");
+    headerEl.innerHTML = headerContent;
+    footerTexto.innerHTML = footerContent;
 
-    detectarClickSection(headerEl, inputHeader)
-    detectarClickSection(footerEl, inputFooter)
+    headerEl.addEventListener('dblclick', () => {
+        headerEl.contentEditable = 'true';
+        headerEl.focus();
+    });
+    headerEl.addEventListener('blur', () => {
+        headerEl.contentEditable = 'false';
+    });
+    headerEl.addEventListener('input', () => {
+        headerContent = headerEl.innerHTML;
+        document.querySelectorAll('.pagina-header').forEach(el => {
+            if (el !== headerEl) el.innerHTML = headerContent;
+        });
+    });
+
+    footerTexto.addEventListener('dblclick', () => {
+        footerTexto.contentEditable = 'true';
+        footerTexto.focus();
+    });
+    footerTexto.addEventListener('blur', () => {
+        footerTexto.contentEditable = 'false';
+    });
+    footerTexto.addEventListener('input', () => {
+        footerContent = footerTexto.innerHTML;
+        document.querySelectorAll('.footer-texto').forEach(el => {
+            if (el !== footerTexto) el.innerHTML = footerContent;
+        });
+    });
 
     const contenido = div.querySelector('.pagina-contenido');
 
@@ -95,7 +90,6 @@ function renderizarPagina(pagina) {
     });
 
     contenedor.appendChild(div);
-    sincronizarHeaderFooter();
 }
 
 function agregarPagina() {
@@ -120,12 +114,6 @@ function comprobarDesbordamiento(contenido, pagina) {
     }
 }
 
-function sincronizarHeaderFooter() {
-    const h = document.getElementById('inputHeader').textContent;
-    const f = document.getElementById('inputFooter').textContent;
-    document.querySelectorAll('.pagina-header').forEach(el => el.textContent = h);
-    document.querySelectorAll('.footer-texto').forEach(el => el.textContent = f);
-}
 
 function formato(comando, valor=null) { document.execCommand(comando, false, valor); }
 function cambiarColor() { document.getElementById('colorPicker').click(); }
@@ -135,8 +123,8 @@ function insertarEnlace() {
 }
 
 async function exportarPDF() {
-    const header = document.getElementById('inputHeader').textContent;
-    const footer = document.getElementById('inputFooter').textContent;
+    const header = document.querySelector('.pagina-header')?.textContent.trim() ?? '';
+    const footer = document.querySelector('.footer-texto')?.textContent.trim() ?? '';
     const htmlContent = paginas.map(p => p.body).join('');
 
     const response = await fetch('/Home/ExportPDF', {
@@ -159,8 +147,8 @@ async function exportarPDF() {
     URL.revokeObjectURL(url); }
 
 async function exportarWord() {
-    const header = document.getElementById('inputHeader').textContent;
-    const footer = document.getElementById('inputFooter').textContent;
+    const header = document.querySelector('.pagina-header')?.textContent.trim() ?? '';
+    const footer = document.querySelector('.footer-texto')?.textContent.trim() ?? '';
     const htmlContent = paginas.map(p => p.body).join('');
 
     const response = await fetch('/Home/ExportWord', {

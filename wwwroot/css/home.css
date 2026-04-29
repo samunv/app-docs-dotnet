@@ -1,35 +1,4 @@
-﻿.hf-input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 794px;
-    position: absolute;
-    z-index: 100;
-    left: 50%;
-    transform: translateX(-50%);
-    min-height: 36px;
-    max-height: 100px;
-    overflow-y: auto;
-    outline: none;
-    cursor: text;
-    background: white;
-    box-sizing: border-box;
-}
-
-.hf-input:empty:not(:focus)::before {
-    content: attr(data-placeholder);
-    color: #aaa;
-    pointer-events: none;
-}
-
-   #inputHeader{
-        top:100px;
-    }
-
-    #inputFooter{
-        bottom:0px;
-    }
-
+﻿
 
     .toolbar {
         padding:20px;
@@ -88,6 +57,16 @@
     text-align: center;
     color: #555;
     min-height: 50px;
+    cursor: default;
+}
+
+.pagina-header:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.pagina-header[contenteditable="true"] {
+    outline: 1px dashed #aaa;
+    cursor: text;
 }
 
 .pagina-contenido {
@@ -107,6 +86,19 @@
     justify-content: space-between;
     color: #555;
     min-height: 50px;
+}
+
+.footer-texto {
+    cursor: default;
+}
+
+.footer-texto:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.footer-texto[contenteditable="true"] {
+    outline: 1px dashed #aaa;
+    cursor: text;
 }
 
 
