@@ -58,9 +58,9 @@ function renderizarPagina(pagina) {
         headerEl.contentEditable = 'true';
         headerEl.focus();
     });
-    headerEl.addEventListener('blur', () => {
-        headerEl.contentEditable = 'false';
-    });
+    //headerEl.addEventListener('blur', () => {
+    //    headerEl.contentEditable = 'false';
+    //});
     headerEl.addEventListener('input', () => {
         headerContent = headerEl.innerHTML;
         document.querySelectorAll('.pagina-header').forEach(el => {
