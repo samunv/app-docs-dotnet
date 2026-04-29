@@ -6,7 +6,7 @@ namespace HtmlEditorApp.Services
 {
     public class DocumentPdfService
     {
-        public async Task<byte[]> GenerarPdf(RequestDocumento request)
+        public async Task<byte[]> GenerarPdf(AppDocumentFormat request)
         {
             using var playwright = await Playwright.CreateAsync();
             await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions

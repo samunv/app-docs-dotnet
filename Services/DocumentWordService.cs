@@ -8,7 +8,7 @@ namespace HtmlEditorApp.Services
 {
     public class DocumentWordService
     {
-        public async Task<byte[]> GenerarWord(RequestDocumento request)
+        public async Task<byte[]> GenerarWord(AppDocumentFormat request)
         {
             var stream = new MemoryStream();
 

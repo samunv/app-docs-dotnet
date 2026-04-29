@@ -25,7 +25,7 @@ namespace HtmlEditorApp.Controllers
         // POST /Home/ExportWord
         // recibe el HTML y se lo pasamos al service para que se encargue de generar el word
         [HttpPost]
-        public async Task<IActionResult> ExportWord([FromBody] RequestDocumento request)
+        public async Task<IActionResult> ExportWord([FromBody] AppDocumentFormat request)
         {
             var bytes = await _documentWordService.GenerarWord(request);
             return File(bytes, 
@@ -36,7 +36,7 @@ namespace HtmlEditorApp.Controllers
         /** POST /Home/ExportPDF
         / recibe el HTML y convertimos a PDF para exportar**/
         [HttpPost]
-        public  async Task<IActionResult> ExportPDF([FromBody] RequestDocumento request)
+        public  async Task<IActionResult> ExportPDF([FromBody] AppDocumentFormat request)
         {
             var bytes = await _documentPdfService.GenerarPdf(request);
             return File(bytes, "application/pdf", "documento.pdf");
