@@ -17,8 +17,8 @@ namespace HtmlEditorApp.Services
                 var mainPart = doc.AddMainDocumentPart();
                 mainPart.Document = new WordDocument.Document(new WordDocument.Body());
 
-                AgregarHeader(mainPart, request.Header ?? "");
-                AgregarFooter(mainPart, request.Footer ?? "");
+                await AgregarHeader(mainPart, request.Header ?? "");
+                await AgregarFooter(mainPart, request.Footer ?? "");
                 await AgregarContenido(mainPart, request.HtmlContent ?? "");
 
                 mainPart.Document.Save();
@@ -27,17 +27,23 @@ namespace HtmlEditorApp.Services
             return stream.ToArray();
         }
 
-        private void AgregarHeader(MainDocumentPart mainPart, string textoHeader)
+        private async Task AgregarHeader(MainDocumentPart mainPart, string htmlHeader)
         {
+            var body = mainPart.Document.Body!;
+            var antes = body.Elements<WordDocument.Paragraph>().Count();
+
+            var converter = new HtmlConverter(mainPart);
+            await converter.ParseBody(htmlHeader);
+
+            var parrafos = body.Elements<WordDocument.Paragraph>().Skip(antes).ToList();
+            foreach (var p in parrafos) p.Remove();
+
             var headerPart = mainPart.AddNewPart<HeaderPart>();
-            headerPart.Header = new WordDocument.Header(
-                new WordDocument.Paragraph(
-                    new WordDocument.ParagraphProperties(
-                        new WordDocument.Justification { Val = WordDocument.JustificationValues.Center }
-                    ),
-                    new WordDocument.Run(new WordDocument.Text(textoHeader))
-                )
-            );
+            var header = new WordDocument.Header();
+            foreach (var p in parrafos) header.AppendChild(p);
+            if (!parrafos.Any()) header.AppendChild(new WordDocument.Paragraph());
+
+            headerPart.Header = header;
             headerPart.Header.Save();
 
             ObtenerSectionProps(mainPart).Append(new WordDocument.HeaderReference()
@@ -47,21 +53,23 @@ namespace HtmlEditorApp.Services
             });
         }
 
-        private void AgregarFooter(MainDocumentPart mainPart, string textoFooter)
+        private async Task AgregarFooter(MainDocumentPart mainPart, string htmlFooter)
         {
-           
+            var body = mainPart.Document.Body!;
+            var antes = body.Elements<WordDocument.Paragraph>().Count();
+
+            var converter = new HtmlConverter(mainPart);
+            await converter.ParseBody(htmlFooter);
+
+            var parrafos = body.Elements<WordDocument.Paragraph>().Skip(antes).ToList();
+            foreach (var p in parrafos) p.Remove();
+
             var footerPart = mainPart.AddNewPart<FooterPart>();
+            var footer = new WordDocument.Footer();
+            foreach (var p in parrafos) footer.AppendChild(p);
+            if (!parrafos.Any()) footer.AppendChild(new WordDocument.Paragraph());
 
-            // Footer con texto + número de página
-            var paragraph = new WordDocument.Paragraph(
-                new WordDocument.ParagraphProperties(
-                    new WordDocument.Justification { Val = WordDocument.JustificationValues.Center }
-                ),
-                new WordDocument.Run(new WordDocument.Text($"{textoFooter}  -  Página ") { Space = SpaceProcessingModeValues.Preserve }),
-                new WordDocument.SimpleField() { Instruction = "PAGE" }
-            );
-
-            footerPart.Footer = new WordDocument.Footer(paragraph);
+            footerPart.Footer = footer;
             footerPart.Footer.Save();
 
             ObtenerSectionProps(mainPart).Append(new WordDocument.FooterReference()
