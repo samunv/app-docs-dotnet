@@ -40,6 +40,31 @@ window.addEventListener('DOMContentLoaded', () => {
 function renderizarPagina(pagina) {
     const contenedor = document.getElementById('contenedor-paginas');
 
+    const div = getHTMLDivPage(pagina)
+
+    const headerEl = div.querySelector('.pagina-header');
+    const footerTexto = div.querySelector('.footer-texto');
+
+    headerEl.innerHTML = headerContent;
+    footerTexto.innerHTML = footerContent;
+
+    useDoubleClickListener(headerEl)
+    useDoubleClickListener(footerTexto)
+
+    useObserver(headerEl, headerObservers, '.pagina-header', c => headerContent = c);
+    useObserver(footerTexto, footerObservers, '.footer-texto', c => footerContent = c);
+
+    const contenido = div.querySelector('.pagina-contenido');
+
+    contenido.addEventListener('input', () => {
+        actualizarBody(pagina.num, contenido.innerHTML);
+        comprobarDesbordamiento(contenido, pagina);
+    });
+
+    contenedor.appendChild(div);
+}
+
+function getHTMLDivPage(pagina) {
     const div = document.createElement('div');
     div.className = 'pagina';
     div.dataset.num = pagina.num;
@@ -51,60 +76,33 @@ function renderizarPagina(pagina) {
             <span>Página ${pagina.num}</span>
         </div>
     `;
-
-    const headerEl = div.querySelector('.pagina-header');
-    const footerTexto = div.querySelector('.footer-texto');
-
-    headerEl.innerHTML = headerContent;
-    footerTexto.innerHTML = footerContent;
-
-    headerEl.addEventListener('dblclick', () => {
-        headerEl.contentEditable = 'true';
-        headerEl.focus();
-    });
-
-    const headerObserver = new MutationObserver(() => {
-        headerContent = headerEl.innerHTML;
-        document.querySelectorAll('.pagina-header').forEach(el => {
-            if (el !== headerEl) {
-                const obs = headerObservers.get(el);
-                obs?.disconnect();
-                el.innerHTML = headerContent;
-                obs?.observe(el, OBSERVER_CONFIG);
-            }
-        });
-    });
-    headerObserver.observe(headerEl, OBSERVER_CONFIG);
-    headerObservers.set(headerEl, headerObserver);
-
-    footerTexto.addEventListener('dblclick', () => {
-        footerTexto.contentEditable = 'true';
-        footerTexto.focus();
-    });
-
-    const footerObserver = new MutationObserver(() => {
-        footerContent = footerTexto.innerHTML;
-        document.querySelectorAll('.footer-texto').forEach(el => {
-            if (el !== footerTexto) {
-                const obs = footerObservers.get(el);
-                obs?.disconnect();
-                el.innerHTML = footerContent;
-                obs?.observe(el, OBSERVER_CONFIG);
-            }
-        });
-    });
-    footerObserver.observe(footerTexto, OBSERVER_CONFIG);
-    footerObservers.set(footerTexto, footerObserver);
-
-    const contenido = div.querySelector('.pagina-contenido');
-
-    contenido.addEventListener('input', () => {
-        actualizarBody(pagina.num, contenido.innerHTML);
-        comprobarDesbordamiento(contenido, pagina);
-    });
-
-    contenedor.appendChild(div);
+    return div;
 }
+
+function useDoubleClickListener(element) {
+    element.addEventListener('dblclick', () => {
+        element.contentEditable = 'true';
+        element.focus();
+    });
+}
+
+function useObserver(element, elementObservers, classSelector, setContent) {
+    const observer = new MutationObserver(() => {
+        const content = element.innerHTML;
+        setContent(content);
+        document.querySelectorAll(classSelector).forEach(el => {
+            if (el !== element) {
+                const obs = elementObservers.get(el);
+                obs?.disconnect();
+                el.innerHTML = content;
+                obs?.observe(el, OBSERVER_CONFIG);
+            }
+        });
+    });
+    observer.observe(element, OBSERVER_CONFIG);
+    elementObservers.set(element, observer);
+}
+
 
 function agregarPagina() {
     const nueva = new Pagina(paginas.length + 1);
