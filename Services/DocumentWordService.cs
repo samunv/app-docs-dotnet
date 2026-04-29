@@ -29,54 +29,14 @@ namespace HtmlEditorApp.Services
 
         private async Task AgregarHeader(MainDocumentPart mainPart, string htmlHeader)
         {
-            var body = mainPart.Document.Body!;
-            var antes = body.Elements<WordDocument.Paragraph>().Count();
-
             var converter = new HtmlConverter(mainPart);
-            await converter.ParseBody(htmlHeader);
-
-            var parrafos = body.Elements<WordDocument.Paragraph>().Skip(antes).ToList();
-            foreach (var p in parrafos) p.Remove();
-
-            var headerPart = mainPart.AddNewPart<HeaderPart>();
-            var header = new WordDocument.Header();
-            foreach (var p in parrafos) header.AppendChild(p);
-            if (!parrafos.Any()) header.AppendChild(new WordDocument.Paragraph());
-
-            headerPart.Header = header;
-            headerPart.Header.Save();
-
-            ObtenerSectionProps(mainPart).Append(new WordDocument.HeaderReference()
-            {
-                Type = WordDocument.HeaderFooterValues.Default,
-                Id = mainPart.GetIdOfPart(headerPart)
-            });
+            await converter.ParseHeader(htmlHeader, WordDocument.HeaderFooterValues.Default);
         }
 
         private async Task AgregarFooter(MainDocumentPart mainPart, string htmlFooter)
         {
-            var body = mainPart.Document.Body!;
-            var antes = body.Elements<WordDocument.Paragraph>().Count();
-
             var converter = new HtmlConverter(mainPart);
-            await converter.ParseBody(htmlFooter);
-
-            var parrafos = body.Elements<WordDocument.Paragraph>().Skip(antes).ToList();
-            foreach (var p in parrafos) p.Remove();
-
-            var footerPart = mainPart.AddNewPart<FooterPart>();
-            var footer = new WordDocument.Footer();
-            foreach (var p in parrafos) footer.AppendChild(p);
-            if (!parrafos.Any()) footer.AppendChild(new WordDocument.Paragraph());
-
-            footerPart.Footer = footer;
-            footerPart.Footer.Save();
-
-            ObtenerSectionProps(mainPart).Append(new WordDocument.FooterReference()
-            {
-                Type = WordDocument.HeaderFooterValues.Default,
-                Id = mainPart.GetIdOfPart(footerPart)
-            });
+            await converter.ParseFooter(htmlFooter, WordDocument.HeaderFooterValues.Default);
         }
 
 
