@@ -1,5 +1,4 @@
 ﻿.hf-input {
-    flex: 1;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -8,6 +7,19 @@
     z-index: 100;
     left: 50%;
     transform: translateX(-50%);
+    min-height: 36px;
+    max-height: 100px;
+    overflow-y: auto;
+    outline: none;
+    cursor: text;
+    background: white;
+    box-sizing: border-box;
+}
+
+.hf-input:empty:not(:focus)::before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    pointer-events: none;
 }
 
    #inputHeader{
