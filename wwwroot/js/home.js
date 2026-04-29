@@ -8,6 +8,10 @@ const paginas = [];
 let seleccionGuardada = null;
 let headerContent = '';
 let footerContent = '';
+let propagandoHeader = false;
+let propagandoFooter = false;
+
+const OBSERVER_CONFIG = { subtree: true, childList: true, characterData: true, attributes: true };
 
 
 const imagenManager = new ImagenManager();
@@ -58,29 +62,33 @@ function renderizarPagina(pagina) {
         headerEl.contentEditable = 'true';
         headerEl.focus();
     });
-    //headerEl.addEventListener('blur', () => {
-    //    headerEl.contentEditable = 'false';
-    //});
-    headerEl.addEventListener('input', () => {
+
+    const headerObserver = new MutationObserver(() => {
+        if (propagandoHeader) return;
+        propagandoHeader = true;
         headerContent = headerEl.innerHTML;
         document.querySelectorAll('.pagina-header').forEach(el => {
             if (el !== headerEl) el.innerHTML = headerContent;
         });
+        propagandoHeader = false;
     });
+    headerObserver.observe(headerEl, OBSERVER_CONFIG);
 
     footerTexto.addEventListener('dblclick', () => {
         footerTexto.contentEditable = 'true';
         footerTexto.focus();
     });
-    footerTexto.addEventListener('blur', () => {
-        footerTexto.contentEditable = 'false';
-    });
-    footerTexto.addEventListener('input', () => {
+
+    const footerObserver = new MutationObserver(() => {
+        if (propagandoFooter) return;
+        propagandoFooter = true;
         footerContent = footerTexto.innerHTML;
         document.querySelectorAll('.footer-texto').forEach(el => {
             if (el !== footerTexto) el.innerHTML = footerContent;
         });
+        propagandoFooter = false;
     });
+    footerObserver.observe(footerTexto, OBSERVER_CONFIG);
 
     const contenido = div.querySelector('.pagina-contenido');
 
