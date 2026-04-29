@@ -30,6 +30,7 @@
     .toolbar button.btn-active {
         background-color: #e8f0fe;
         color: #1a73e8;
+        border-radius:10px;
     }
 
     .toolbar .separador {
