@@ -102,29 +102,24 @@
 }
 
 
-.botones-exportar {
-    display: flex;
-    gap: 10px;
-    margin: 20px 0;
-    justify-content: center;
-}
 
-    .botones-exportar button {
-        padding: 10px 20px;
+    .botones-exportar {
         border: none;
-        border-radius: 4px;
+        padding: 10px 30px !important;
+        border-radius: 30px !important;
         cursor: pointer;
         font-weight: bold;
     }
 
 
-.btn-pdf {
-    background: #e74c3c !important;
-    color: white;
-    margin-left:auto;
-}
+        .botones-exportar.btn-pdf {
+            background: #e74c3c !important;
+            color: white;
+            margin-left: auto;
+        }
 
-.btn-word {
-    background: #2b5fad !important;
-    color: white;
-}
+        .botones-exportar.btn-word {
+            background: #2b5fad !important;
+            color: white;
+            margin-left:5px;
+        }
