@@ -8,10 +8,10 @@ const paginas = [];
 let seleccionGuardada = null;
 let headerContent = '';
 let footerContent = '';
-let propagandoHeader = false;
-let propagandoFooter = false;
 
 const OBSERVER_CONFIG = { subtree: true, childList: true, characterData: true, attributes: true };
+const headerObservers = new Map();
+const footerObservers = new Map();
 
 
 const imagenManager = new ImagenManager();
@@ -64,15 +64,18 @@ function renderizarPagina(pagina) {
     });
 
     const headerObserver = new MutationObserver(() => {
-        if (propagandoHeader) return;
-        propagandoHeader = true;
         headerContent = headerEl.innerHTML;
         document.querySelectorAll('.pagina-header').forEach(el => {
-            if (el !== headerEl) el.innerHTML = headerContent;
+            if (el !== headerEl) {
+                const obs = headerObservers.get(el);
+                obs?.disconnect();
+                el.innerHTML = headerContent;
+                obs?.observe(el, OBSERVER_CONFIG);
+            }
         });
-        propagandoHeader = false;
     });
     headerObserver.observe(headerEl, OBSERVER_CONFIG);
+    headerObservers.set(headerEl, headerObserver);
 
     footerTexto.addEventListener('dblclick', () => {
         footerTexto.contentEditable = 'true';
@@ -80,15 +83,18 @@ function renderizarPagina(pagina) {
     });
 
     const footerObserver = new MutationObserver(() => {
-        if (propagandoFooter) return;
-        propagandoFooter = true;
         footerContent = footerTexto.innerHTML;
         document.querySelectorAll('.footer-texto').forEach(el => {
-            if (el !== footerTexto) el.innerHTML = footerContent;
+            if (el !== footerTexto) {
+                const obs = footerObservers.get(el);
+                obs?.disconnect();
+                el.innerHTML = footerContent;
+                obs?.observe(el, OBSERVER_CONFIG);
+            }
         });
-        propagandoFooter = false;
     });
     footerObserver.observe(footerTexto, OBSERVER_CONFIG);
+    footerObservers.set(footerTexto, footerObserver);
 
     const contenido = div.querySelector('.pagina-contenido');
 
