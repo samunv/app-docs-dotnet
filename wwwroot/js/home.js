@@ -74,7 +74,7 @@ function getHTMLDivPage(pagina) {
         <div class="pagina-contenido" contenteditable="true" spellcheck="${spellcheckEnabled}">${pagina.body}</div>
         <div class="pagina-footer">
             <span class="footer-texto" spellcheck="${spellcheckEnabled}"></span>
-            <span>Página ${pagina.num}</span>
+            <span>Pág ${pagina.num}</span>
         </div>
     `;
     return div;

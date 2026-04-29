@@ -59,18 +59,5 @@ namespace HtmlEditorApp.Services
             await converter.ParseBody(htmlContent);
         }
 
-        private WordDocument.SectionProperties ObtenerSectionProps(MainDocumentPart mainPart)
-        {
-            var body = mainPart.Document.GetFirstChild<WordDocument.Body>()!;
-            var sectionProps = body.GetFirstChild<WordDocument.SectionProperties>();
-
-            if (sectionProps == null)
-            {
-                sectionProps = new WordDocument.SectionProperties();
-                body.AppendChild(sectionProps);
-            }
-
-            return sectionProps;
-        }
     }
 }
