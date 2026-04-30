@@ -16,38 +16,24 @@ namespace HtmlEditorApp.Services
 
             var page = await browser.NewPageAsync();
 
-            var htmlCompleto = $@"<!DOCTYPE html>
-<html>
-<head>
-    <meta charset='utf-8'>
-    <style>
-        body {{ font-family: Arial, sans-serif; margin: 0; }}
-    </style>
-</head>
-<body>
-    {request.HtmlContent ?? ""}
-</body>
-</html>";
+            // Primero navegar al servidor para establecer el contexto
+            await page.GotoAsync("http://localhost:5034");
 
-            await page.SetContentAsync(htmlCompleto);
+            // Luego setear el contenido — ahora las rutas relativas se resolverán contra localhost:5034
+            await page.SetContentAsync(request.HtmlContent ?? "", new PageSetContentOptions
+            {
+                WaitUntil = WaitUntilState.NetworkIdle
+            });
 
             var pdfBytes = await page.PdfAsync(new PagePdfOptions
             {
-                Format = "A4",
+                Width = "210mm",
+                Height = "297mm",
                 PrintBackground = true,
-                DisplayHeaderFooter = true,
-                HeaderTemplate = $"<div style='font-size:10pt; width:100%; text-align:center; padding:5px'>{request.Header ?? ""}</div>",
-                FooterTemplate = $"<div style='font-size:10pt; width:100%; text-align:center; padding:5px'>{request.Footer ?? ""} - Página <span class='pageNumber'></span> de <span class='totalPages'></span></div>",
-                Margin = new Margin
-                    {
-                        Top = "60px",
-                        Bottom = "60px",
-                        Left = "40px",
-                        Right = "40px"
-                    }
+                Margin = new Margin { Top = "0", Bottom = "0", Left = "0", Right = "0" }
             });
 
             return pdfBytes;
         }
     }
-}
+    }

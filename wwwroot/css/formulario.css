@@ -1,0 +1,408 @@
+﻿* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --azul: #000080;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #222;
+    background: #fff;
+    padding: 20px;
+}
+
+.page {
+    width: 210mm;
+    height: 297mm;
+    margin-inline: auto;
+    margin-top: 30px;
+    background: #fff;
+    padding: 40px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+    page-break-after: always;
+}
+
+
+/* HEADER */
+.header {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.pagina-footer{
+    margin-top:20px;
+}
+
+.logo {
+    width: 150px;
+    flex-shrink: 0;
+}
+
+    .logo img{
+        width:150px;
+        object-fit: contain;
+    }
+
+    .title-area {
+        width: 100%;
+        text-align: center;
+        padding-top: 6px;
+        display: flex;
+        justify-content: center;
+    }
+
+.main-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 1px;
+    text-underline-offset: 3px;
+    text-align: center;
+    color: var(--azul);
+}
+
+/* OPCIONES A/B */
+.opciones {
+    border: solid #aaa 1.5px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+}
+
+.opcion-row {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 5px;
+    gap: 8px;
+}
+
+    .opcion-row:last-child {
+        margin-bottom: 0;
+    }
+
+.opcion-label {
+    font-weight: bold;
+    font-size: 11px;
+    min-width: 58px;
+    color: var(--azul);
+}
+
+.opcion-content {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.field-label {
+    font-weight: bold;
+    font-size: 10px;
+    white-space: nowrap;
+    color: var(--azul);
+}
+
+.field-label-red {
+    font-weight: bold;
+    font-size: 10px;
+    color: var(--azul);
+    white-space: nowrap;
+}
+
+input[type="text"] {
+    border: none;
+    border-bottom: 1px solid #555;
+    outline: none;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    padding: 0 2px;
+    background: transparent;
+    color: #222;
+}
+
+
+.input-empresa {
+    width: 220px;
+}
+
+.input-cif {
+    width: 80px;
+}
+
+.input-entidad {
+    width: 160px;
+}
+
+.input-cif2 {
+    width: 80px;
+}
+
+.input-codigo {
+    width: 90px;
+}
+
+/* NOTA */
+.nota {
+    font-size: 9px;
+    font-style: italic;
+    color: gray;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+/* BLOQUE DENOMINACIÓN */
+.denominacion-box {
+    border: 1.5px solid #aaa;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+}
+
+.denom-row {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 6px;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+
+    .denom-row:last-child {
+        margin-bottom: 0;
+    }
+
+.denom-label {
+    font-size: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    color: var(--azul);
+}
+
+.input-denom {
+    width: 300px;
+}
+
+.input-num {
+    width: 60px;
+}
+
+.input-grupo {
+    width: 60px;
+}
+
+.input-fecha {
+    width: 70px;
+}
+
+.input-horario {
+    width: 50px;
+}
+
+.input-horas {
+    width: 60px;
+}
+
+.firma-box {
+    display: flex;
+    flex-direction:column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.firma-area {
+    border: 1px solid #aaa;
+    width: 90px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    color: #999;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+}
+
+
+
+
+
+    .firma-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+    }
+
+.firma-info {
+    font-size: 9.5px;
+    line-height: 1.6;
+}
+
+    .firma-info label{
+        color:var(--azul);
+        font-weight:bold;
+
+    }
+
+    .firma-nombre {
+        font-weight: bold;
+        color: #c00;
+    }
+
+/* TABLA */
+.tabla-wrapper {
+    margin-bottom: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+}
+
+.tabla-datos {
+    border: 1.5px solid #aaa;
+    margin-bottom:10px;
+}
+
+
+thead tr th {
+    border: 1px solid #999;
+    padding: 5px 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10.5px;
+    color: var(--azul);
+}
+
+
+
+
+tbody tr td {
+    border: 1px solid #aaa;
+    padding: 3px 5px;
+    height:30px;
+    vertical-align: middle;
+}
+
+    tbody tr td input[type="text"] {
+        width: 100%;
+        font-size: 10px;
+        border:none;
+    }
+
+.td-num {
+    width: 24px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.td-apellidos {
+    width: 38%;
+}
+
+.td-nombre {
+    width: 22%;
+}
+
+.td-nif {
+    width: 14%;
+}
+
+.td-firma {
+    width: 16%;
+}
+
+.td-obs {
+    width: 14%;
+}
+
+tbody tr:first-child td {
+    border-top: 2px solid #aaa; /* línea separadora */
+}
+
+/* OBSERVACIONES GENERALES */
+.obs-generales {
+    border: 1.5px solid #aaa;
+    padding: 0;
+    margin-top: 4px;
+}
+
+.obs-title {
+    font-weight: bold;
+    font-size: 10.5px;
+    padding: 4px 8px;
+    color:var(--azul);
+}
+
+.obs-body {
+    padding: 4px 10px;
+    min-height: 50px;
+}
+
+textarea.obs-input {
+    width: 100%;
+    min-height: 50px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    background: transparent;
+    color: #222;
+    padding: 0;
+}
+
+/* FOOTER */
+.footer {
+    text-align: right;
+    font-size: 10px;
+    margin-top: 10px;
+    color: var(--azul);
+    font-weight:bold;
+    font-style:italic;
+}
+
+/* Turnos MAÑANA/TARDE */
+.turno-group {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+select.turno-select {
+    border: none;
+    border-bottom: 1px solid #555;
+    outline: none;
+    font-size: 10px;
+    font-family: Arial, sans-serif;
+    background: transparent;
+    cursor: pointer;
+    color: #222;
+    padding: 0 2px;
+}
+
+    select.turno-select:focus {
+        border-bottom: 1.5px solid var(--azul);
+    }
+
+@media print {
+    body {
+        padding: 10px;
+    }
+
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+        background: transparent;
+        border-color: var(--azul);
+    }
+}

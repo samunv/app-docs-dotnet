@@ -2,4 +2,17 @@
     ViewData["Title"] = "Formulario";
 }
 
-<h1>Hola mundo</h1>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/formulario.css" />
+}
+
+@section Scripts {
+    <script type="module" src="~/js/formulario.js"></script>
+}
+
+
+<div id="contenedor-paginas"></div>
+<button onclick="agregarPagina()">+ Añadir página</button>
+<button onclick="exportarWord()">Exportar word </button>
+<button onclick="exportarPDF()">📄 Exportar PDF</button>

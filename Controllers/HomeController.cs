@@ -27,6 +27,11 @@ namespace HtmlEditorApp.Controllers
         [HttpPost]
         public async Task<IActionResult> ExportWord([FromBody] AppDocumentFormat request)
         {
+
+            Console.WriteLine($"=== HTML recibido ===\n{request.HtmlContent}\n=====================");
+            Console.WriteLine($"=== HEADER ===\n{request.Header}\n=====================");
+            Console.WriteLine($"=== FOOTER ===\n{request.Footer}\n=====================");
+
             var bytes = await _documentWordService.GenerarWord(request);
             return File(bytes, 
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
