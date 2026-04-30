@@ -1,63 +1,67 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using HtmlEditorApp.Models;
-using WordDocument = DocumentFormat.OpenXml.Wordprocessing;
-using HtmlToOpenXml;
+﻿using HtmlEditorApp.Models;
+using Microsoft.Playwright;
 
 namespace HtmlEditorApp.Services
 {
     public class DocumentWordService
     {
+        private readonly DocumentPdfService _pdfService;
+
+        public DocumentWordService(DocumentPdfService pdfService)
+        {
+            _pdfService = pdfService;
+        }
+
         public async Task<byte[]> GenerarWord(AppDocumentFormat request)
         {
-            var stream = new MemoryStream();
+            // 1. Generar PDF 
+            var pdfBytes = await _pdfService.GenerarPdf(request);
 
-            using (var doc = WordprocessingDocument.Create(stream, WordprocessingDocumentType.Document, true))
+            // 2. Guardar PDF temporal
+            var tempPdf = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.pdf");
+            await File.WriteAllBytesAsync(tempPdf, pdfBytes);
+
+            // 3. Convertir PDF a DOCX con LibreOffice
+            var soffice = @"C:\Program Files\LibreOffice\program\soffice.exe";
+            var outDir = Path.GetTempPath();
+
+            var userProfile = Path.Combine(Path.GetTempPath(), "libreoffice-profile");
+            Directory.CreateDirectory(userProfile);
+
+            var proceso = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
             {
-                var mainPart = doc.AddMainDocumentPart();
-                mainPart.Document = new WordDocument.Document(new WordDocument.Body());
+                FileName = soffice,
+                Arguments = $"--headless --norestore --nofirststartwizard \"-env:UserInstallation=file:///{userProfile.Replace('\\', '/')}\" --convert-to docx \"{tempPdf}\" --outdir \"{outDir}\"",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = @"C:\Program Files\LibreOffice\program"
+            });
 
-                var stylesPart = mainPart.AddNewPart<StyleDefinitionsPart>();
-                stylesPart.Styles = new WordDocument.Styles(
-                    new WordDocument.DocDefaults(
-                        new WordDocument.RunPropertiesDefault(
-                            new WordDocument.RunPropertiesBaseStyle(
-                                new WordDocument.RunFonts { Ascii = "Arial", HighAnsi = "Arial" },
-                                new WordDocument.FontSize { Val = "24" }
-                            )
-                        )
-                    )
-                );
-                stylesPart.Styles.Save();
+            await proceso!.WaitForExitAsync();
 
-                await AgregarHeader(mainPart, request.Header ?? "");
-                await AgregarFooter(mainPart, request.Footer ?? "");
-                await AgregarContenido(mainPart, request.HtmlContent ?? "");
+            var output = await proceso.StandardOutput.ReadToEndAsync();
+            var error = await proceso.StandardError.ReadToEndAsync();
 
-                mainPart.Document.Save();
-            }
+            var docxPath = Path.Combine(outDir, Path.GetFileNameWithoutExtension(tempPdf) + ".docx");
 
-            return stream.ToArray();
+            Console.WriteLine($"=== LibreOffice ===");
+            Console.WriteLine($"Exit code: {proceso.ExitCode}");
+            Console.WriteLine($"Output: {output}");
+            Console.WriteLine($"Error: {error}");
+            Console.WriteLine($"PDF existe: {File.Exists(tempPdf)}");
+            Console.WriteLine($"DOCX path: {docxPath}");
+            Console.WriteLine($"DOCX existe: {File.Exists(docxPath)}");
+
+            // Leer el DOCX generado
+            var docxBytes = await File.ReadAllBytesAsync(docxPath);
+
+            // Limpiar temporales
+            File.Delete(tempPdf);
+            File.Delete(docxPath);
+
+            return docxBytes;
         }
-
-        private async Task AgregarHeader(MainDocumentPart mainPart, string htmlHeader)
-        {
-            var converter = new HtmlConverter(mainPart);
-            await converter.ParseHeader(htmlHeader, WordDocument.HeaderFooterValues.Default);
-        }
-
-        private async Task AgregarFooter(MainDocumentPart mainPart, string htmlFooter)
-        {
-            var converter = new HtmlConverter(mainPart);
-            await converter.ParseFooter(htmlFooter, WordDocument.HeaderFooterValues.Default);
-        }
-
-
-        private async Task AgregarContenido(MainDocumentPart mainPart, string htmlContent)
-        {
-            var converter = new HtmlToOpenXml.HtmlConverter(mainPart);
-            await converter.ParseBody(htmlContent);
-        }
-
     }
 }

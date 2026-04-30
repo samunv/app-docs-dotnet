@@ -30,6 +30,7 @@ namespace HtmlEditorApp.Services
                 Width = "210mm",
                 Height = "297mm",
                 PrintBackground = true,
+                Tagged = true,
                 Margin = new Margin { Top = "0", Bottom = "0", Left = "0", Right = "0" }
             });
 

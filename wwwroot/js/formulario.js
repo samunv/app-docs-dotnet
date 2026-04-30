@@ -297,44 +297,6 @@ function agregarPagina() {
 
 // ── Exportar ──
 
-async function exportarWord() {
-    document.querySelectorAll('.page').forEach(page => {
-        page.querySelectorAll('input[type="text"]').forEach(input => {
-            input.setAttribute('value', input.value);
-        });
-        page.querySelectorAll('textarea').forEach(ta => {
-            ta.textContent = ta.value;
-        });
-        page.querySelectorAll('select').forEach(sel => {
-            [...sel.options].forEach(opt => {
-                if (opt.selected) opt.setAttribute('selected', '');
-                else opt.removeAttribute('selected');
-            });
-        });
-    });
-
-    const payload = {
-        header: document.querySelector('.pagina-header')?.innerHTML || '',
-        footer: document.querySelector('.pagina-footer')?.innerHTML || '',
-        htmlContent: [...document.querySelectorAll('.pagina-tbody')].map(t => t.innerHTML).join('')
-    };
-
-    const response = await fetch('/Home/ExportWord', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) { alert('Error al generar el Word'); return; }
-
-    const blob = await response.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'documento.docx';
-    a.click();
-    URL.revokeObjectURL(url);
-}
 
 
 
@@ -408,7 +370,80 @@ async function exportarPDF() {
     a.click();
     URL.revokeObjectURL(url);
 }
+
 window.exportarPDF = exportarPDF;
+
+
+
+async function exportarWord() {
+    // Serializar valores
+    document.querySelectorAll('.page').forEach(page => {
+        page.querySelectorAll('input[type="text"]').forEach(input => {
+            input.setAttribute('value', input.value);
+        });
+        page.querySelectorAll('textarea').forEach(ta => {
+            ta.textContent = ta.value;
+        });
+        page.querySelectorAll('select').forEach(sel => {
+            [...sel.options].forEach(opt => {
+                if (opt.selected) opt.setAttribute('selected', '');
+                else opt.removeAttribute('selected');
+            });
+        });
+    });
+
+    // Recoger CSS
+    const css = await fetch('/css/formulario.css').then(r => r.text());
+
+    const cssExtra = `
+    body { margin: 0 !important; padding: 0 !important; background: white !important; }
+    .page { 
+        margin: 0 !important; 
+        margin-top: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        page-break-inside: avoid;
+    }
+    #contenedor-paginas { 
+        padding: 0 !important; 
+        gap: 0 !important; 
+        background: white !important; 
+    }
+    `
+
+    const estilos = css + cssExtra
+
+    // HTML completo con estilos y páginas
+    const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <style>${estilos}</style>
+        </head>
+        <body>
+            <div id="contenedor-paginas">
+                ${[...document.querySelectorAll('.page')].map(p => p.outerHTML).join('')}
+            </div>
+        </body>
+        </html>`;
+
+    const response = await fetch('/Home/ExportWord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ htmlContent, header: '', footer: '' })
+    });
+
+    if (!response.ok) { alert('Error al generar el Word'); return; }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'documento.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+}
 
 
 // ── Init ──
