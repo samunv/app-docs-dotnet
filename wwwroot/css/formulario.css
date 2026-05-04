@@ -290,6 +290,7 @@ tbody tr td {
     border: 1px solid #aaa;
     padding: 3px 5px;
     height:30px;
+    max-height:30px !important:
     vertical-align: middle;
 }
 
