@@ -1,3 +1,4 @@
+# Scripts/convertir.py
 import sys
 from pdf2docx import Converter
 
@@ -12,7 +13,4 @@ if __name__ == "__main__":
         print("Uso: python convertir.py <pdf_path> <docx_path>")
         sys.exit(1)
     
-    pdf_path = sys.argv[1]
-    docx_path = sys.argv[2]
-    
-    convertir(pdf_path, docx_path)
+    convertir(sys.argv[1], sys.argv[2])

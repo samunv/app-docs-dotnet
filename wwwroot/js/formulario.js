@@ -1,4 +1,6 @@
 ﻿import { Pagina } from './Types/Pagina.js';
+import { ExportableHTML } from "./Types/ExportableHTML.js"
+import { exportarDocx } from "./WordExporter.js"
 
 // ── Estado ──
 const headerState = {
@@ -272,23 +274,29 @@ function serializarPaginas() {
     });
 }
 
-async function construirHtmlExport() {
+async function obtenerObjetoExport() {
+    const css = await obtenerCSS()
+    const htmlContent = `<div id="contenedor-paginas">
+            ${[...document.querySelectorAll('.page')].map(p => p.outerHTML).join('')}
+        </div>`
+
+    return ExportableHTML.construirHtmlExport(css, htmlContent)
+}
+
+
+async function obtenerCSS() {
     const css = await fetch('/css/formulario.css').then(r => r.text());
     const cssExtra = `
         body { margin: 0 !important; padding: 0 !important; background: white !important; }
         .page { margin: 0 !important; box-shadow: none !important; page-break-after: always; page-break-inside: avoid; }
         #contenedor-paginas { padding: 0 !important; gap: 0 !important; background: white !important; }
     `;
-    return `<!DOCTYPE html>
-        <html><head><meta charset='utf-8'><style>${css + cssExtra}</style></head>
-        <body><div id="contenedor-paginas">
-            ${[...document.querySelectorAll('.page')].map(p => p.outerHTML).join('')}
-        </div></body></html>`;
+    return css + cssExtra
 }
 
 async function exportar(endpoint, nombreArchivo) {
     serializarPaginas();
-    const htmlContent = await construirHtmlExport();
+    const htmlContent = await obtenerObjetoExport();
 
     const response = await fetch(endpoint, {
         method: 'POST',
@@ -309,6 +317,7 @@ async function exportar(endpoint, nombreArchivo) {
 
 const exportarPDF = () => exportar('/Home/ExportPdf', 'documento.pdf');
 const exportarWord = () => exportar('/Home/ExportWord', 'documento.docx');
+const exportarWordDocx = () => exportarDocx(headerState, footerState);
 
 // ── Init ──
 
@@ -317,3 +326,4 @@ window.addEventListener('DOMContentLoaded', () => agregarPagina());
 window.agregarPagina = agregarPagina;
 window.exportarPDF = exportarPDF;
 window.exportarWord = exportarWord;
+window.exportarWordDocx = exportarWordDocx;

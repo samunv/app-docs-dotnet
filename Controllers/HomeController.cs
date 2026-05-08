@@ -7,13 +7,13 @@ namespace HtmlEditorApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly DocumentWordPythonService _documentWordPyService;
+        private readonly DocumentWordService _documentWordService;
         private readonly DocumentPdfService _documentPdfService;
 
 
-        public HomeController(DocumentWordPythonService documentWordPyService, DocumentPdfService documentPdfService)
+        public HomeController(DocumentWordService documentWordService, DocumentPdfService documentPdfService)
         {
-            _documentWordPyService = documentWordPyService;
+            _documentWordService = documentWordService;
             _documentPdfService = documentPdfService;
         }
 
@@ -32,7 +32,7 @@ namespace HtmlEditorApp.Controllers
             Console.WriteLine($"=== HEADER ===\n{request.Header}\n=====================");
             Console.WriteLine($"=== FOOTER ===\n{request.Footer}\n=====================");
 
-            var bytes = await _documentWordPyService.GenerarWord(request);
+            var bytes = await _documentWordService.GenerarWord(request);
             return File(bytes, 
                 "application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
                 "documento.docx");
